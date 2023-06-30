@@ -1,0 +1,79 @@
+.slider {
+    position: relative;
+    max-height: 400px; /* Ограничение по высоте */
+    overflow: hidden;
+    margin: 20px 0; /* Отступы сверху и снизу */
+}
+
+.slider img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+}
+
+.slick-slide {
+    margin: 0 10px; /* Отступы между слайдами (картинками) */
+}
+
+.slick-prev,
+.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    color: #333;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.slick-prev {
+    left: 20px;
+}
+
+.slick-next {
+    right: 20px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background-color: #333;
+    border-radius: 50%;
+}
+
+.slick-next:before {
+    transform: translate(-50%, -50%);
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.slick-prev:hover:before,
+.slick-next:hover:before {
+    background-color: #fff;
+}
+
+/* Исправление проблемы с невидимыми стрелками */
+.slick-prev,
+.slick-next {
+    opacity: 1;
+}
+
+.slick-disabled {
+    opacity: 0.5;
+    cursor: default;
+}

@@ -1,0 +1,169 @@
+/*--- Specifications ---*/
+
+/* Сброс стилей для элементов */
+body,
+div,
+article,
+section,
+header,
+footer,
+nav,
+aside,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+li,
+pre,
+code,
+blockquote,
+figure,
+figcaption,
+hr,
+dl,
+dt,
+dd,
+table,
+th,
+td,
+form,
+fieldset,
+legend,
+input,
+textarea,
+button,
+select,
+option,
+optgroup,
+label,
+iframe {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* Корректировка шрифтов */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/* Улучшение доступности для некоторых элементов */
+audio,
+canvas,
+progress,
+video {
+    display: inline-block;
+}
+
+/* Устранение багов связанных с шрифтами в IE 11 */
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* Корректировка отступов и выравнивания */
+body {
+    line-height: 1;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Обнуление стилей гиперссылок */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Обнуление стилей списков */
+ul,
+ol {
+    list-style: none;
+}
+
+/* Обнуление отступов и границ у изображений */
+img {
+    border-style: none;
+    vertical-align: middle;
+}
+
+/* Обнуление стилей для кнопок */
+button {
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Обнуление стилей для формы и ее элементов */
+input,
+textarea,
+select,
+button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background: none;
+    vertical-align: middle;
+    text-align: inherit;
+    appearance: none;
+    outline: none;
+}
+
+/* Обнуление стилей для таблиц */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Обнуление стилей для заголовков */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
