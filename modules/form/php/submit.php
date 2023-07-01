@@ -1,9 +1,40 @@
 <?php
+
+function generateSpamToken() {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+    $time = time();
+
+    // Объедините IP-адрес, User-Agent и время в одну строку
+    $spamData = $ip . $userAgent . $time;
+
+    // Сгенерируйте хэш-код для данных антиспама
+    $spamToken = md5($spamData);
+
+    // Сохраните токен антиспама в cookies
+    setcookie('spam_token', $spamToken, time() + (60 * 60), '/'); // Здесь установлено время жизни в 1 час (можно настроить по вашему усмотрению)
+
+    // Верните токен антиспама для использования на клиентской стороне
+    return $spamToken;
+}
+
+
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $message = $_POST['message'];
+    // Генерация токена антиспама
+    $spamToken = generateSpamToken();
 
+    // Проверка антиспама
+    if (!checkSpamToken($spamToken)) {
+        // Ошибка антиспама, выполните соответствующие действия
+        // Например, отклоните запрос или отправьте сообщение об ошибке
+        http_response_code(403);
+        exit();
+    }
     // Отправка на email
     $to = 'example@gmail.com';
     $subject = 'New message from contact form';
@@ -42,5 +73,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(200);
 } else {
     http_response_code(403);
+}
+
+// Проверка антиспама
+function checkSpamToken($submittedToken) {
+    $storedToken = $_COOKIE['spam_token'];
+
+    // Сравнение токенов антиспама
+    if ($submittedToken === $storedToken) {
+        // Токены совпадают, продолжайте обработку данных
+        return true;
+    }
+
+    // Неверный токен антиспама
+    return false;
 }
 ?>

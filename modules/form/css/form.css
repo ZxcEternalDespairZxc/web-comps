@@ -20,6 +20,9 @@ label {
 input, textarea {
     width: 100%;
     padding: 5px;
+    max-width: 300px; /* Здесь указано значение максимальной ширины в пикселях */
+    min-width: 300px;
+    /*resize: none;*/
 }
 
 button {
@@ -30,6 +33,122 @@ button {
     cursor: pointer;
 }
 
+
+
 button:hover {
     background-color: #45a049;
+}
+
+/* Общий стиль для всех полей ввода */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea {
+    background-color: #f7f7f7;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    color: #333333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+/* Стиль при фокусе на поле ввода */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+textarea:focus {
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль для плейсхолдера в поле ввода */
+input::placeholder,
+textarea::placeholder {
+    color: #999999;
+}
+
+/* Стиль для валидного значения в поле ввода */
+input:valid,
+textarea:valid {
+    border-color: #3ac569;
+}
+
+/* Стиль для невалидного значения в поле ввода */
+input:invalid,
+textarea:invalid {
+    border-color: #e63757;
+}
+
+/* Стили для затемнения фона */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: none; /* Изначально скрыто */
+}
+
+/* Стили для всплывающего окна */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 10000;
+    display: none; /* Изначально скрыто */
+    opacity: 0; /* Изначально прозрачное */
+}
+
+.popup h2 {
+    margin-top: 0;
+}
+
+.popup button {
+    padding: 10px 20px;
+    background-color: #337ab7;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* Стили для блокировки прокрутки страницы */
+body.lock-scroll {
+    overflow: hidden;
+}
+
+/* Стили для прелоадера */
+.loader {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Стили для позиционирования прелоадера */
+.loader-container {
+    display: flex;
+    position: relative;
+    align-items: center;
 }
