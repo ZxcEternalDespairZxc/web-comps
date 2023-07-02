@@ -22,6 +22,8 @@ $(document).ready(function() {
         placeholder: '+7 (___) ___-____'
     });
 
+    // setcookie
+    document.cookie = "token=" + getSpamToken() + ';';
     $('#contact-form').submit(function(event) {
         event.preventDefault(); // Отменяем отправку формы по умолчанию
 
@@ -53,17 +55,21 @@ $(document).ready(function() {
 
         var form = $(this);
         var formData = form.serialize();
-        var spamToken = getSpamToken();
-
-        // Добавление значения токена антиспама в данные формы
-        formData += '&spam_token=' + spamToken;
         $.ajax({
             type: 'POST',
-            url: 'php/submit.php',
+            url: '../php/submit.php/',
             data: formData,
-            beforeSend: function() {
+            xhrFields: {
+                withCredentials: true // Включение отправки cookie
+            },
+            beforeSend: function(xhr) {
                 // Показываем прелоадер перед отправкой данных
                 $('#loader').show();
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    xhr.setRequestHeader('Cookie', cookie);
+                }
             },
             success: function(response) {
                 showPopupWithFadeIn('successPopup');

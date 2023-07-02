@@ -41,7 +41,6 @@
             <button id="submit" type="submit">Submit</button>
             <div id="loader" class="loader"></div>
         </div>
-        <input type="hidden" name="spam_token" value="<?php echo $spamToken; ?>">
     </form>
 </section>
 <!-- Всплывающее окно для отображения успешной отправки данных -->

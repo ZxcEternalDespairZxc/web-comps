@@ -1,40 +1,66 @@
 <?php
+ //link bd
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname = "testmyform";
 
-function generateSpamToken() {
-    $ip = $_SERVER['REMOTE_ADDR'];
-    $userAgent = $_SERVER['HTTP_USER_AGENT'];
-    $time = time();
-
-    // Объедините IP-адрес, User-Agent и время в одну строку
-    $spamData = $ip . $userAgent . $time;
-
-    // Сгенерируйте хэш-код для данных антиспама
-    $spamToken = md5($spamData);
-
-    // Сохраните токен антиспама в cookies
-    setcookie('spam_token', $spamToken, time() + (60 * 60), '/'); // Здесь установлено время жизни в 1 час (можно настроить по вашему усмотрению)
-
-    // Верните токен антиспама для использования на клиентской стороне
-    return $spamToken;
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    echo "Ошибка подключения к базе данных: " . $e->getMessage();
+    exit();
 }
-
-
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $message = $_POST['message'];
+    $phone = $_POST['phone'];
     // Генерация токена антиспама
-    $spamToken = generateSpamToken();
+
+    $token = $_COOKIE['token'];
+    $timestamp = time();
 
     // Проверка антиспама
-    if (!checkSpamToken($spamToken)) {
+    if ($token == "") {
         // Ошибка антиспама, выполните соответствующие действия
         // Например, отклоните запрос или отправьте сообщение об ошибке
         http_response_code(403);
         exit();
     }
+
+
+    // Значение токена
+    $tokenValue = $token;
+
+    // SQL-запрос для получения последних 5 записей с указанным токеном
+    $sql = "SELECT * FROM cookies WHERE token = '$tokenValue' ORDER BY timestamp DESC LIMIT 5";
+
+    // Выполнение запроса
+    $result = $conn->query($sql);
+
+    // Проверяем наличие результатов
+    if ($result->num_rows > 0) {
+        $firstRow = $result->fetch_assoc();
+
+        // Получаем значения полей
+        $token = $firstRow["token"];
+        $time = $firstRow["timestamp"];
+        // Если разница во времени между отправкой первой из пяти последних записей составляет менее одной минуты, то это спам
+        if ($timestamp - $time < 60000) {
+            http_response_code(403);
+            exit();
+        }
+    }
+
+    // Все проверки пройдены, можно отправить данные
+    // Вставка данных в таблицу
+    $stmt = $conn->prepare("INSERT INTO cookies (token, timestamp) VALUES (:token, :timestamp)");
+    $stmt->bindParam(':token', $token);
+    $stmt->bindParam(':timestamp', $timestamp);
+    $stmt->execute();
     // Отправка на email
     $to = 'example@gmail.com';
     $subject = 'New message from contact form';
@@ -44,11 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mail($to, $subject, $body, $headers);
 
     // Запись в Google Sheets
-    $credentialsPath = 'credentials/credentials.json'; // Укажите путь к файлу учетных данных JSON
+    $credentialsPath = '../credentials/credentials.json'; // Укажите путь к файлу учетных данных JSON
     $spreadsheetId = '18oGAVEpIjIzefQyOdBsoaZQkjhk5NavGPa1-koWVrXw'; // Укажите ID вашего документа Google Sheets
     $range = 'Sheet1!A:C'; // Укажите диапазон для записи данных
 
-    require_once 'google/vendor/autoload.php';
+    require_once '../google/vendor/autoload.php';
 
     $client = new Google_Client();
     $client->setAuthConfig($credentialsPath);
@@ -57,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $service = new Google_Service_Sheets($client);
 
     $values = [
-        [$name, $email, $message]
+        [$name, $email, $phone, $message]
     ];
 
     $body = new Google_Service_Sheets_ValueRange([
@@ -88,4 +114,6 @@ function checkSpamToken($submittedToken) {
     // Неверный токен антиспама
     return false;
 }
+// Закрытие соединения с базой данных
+$conn = null;
 ?>
